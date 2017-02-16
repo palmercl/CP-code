@@ -1,0 +1,90 @@
+---
+title: ""
+author: ""
+date: ""
+output: word_document
+---
+
+ 
+```{r,results='hide',echo=FALSE,message=FALSE,warning=FALSE}
+source('00_Data_setup.R')
+source('01_Row_functions.R')
+source('02_Table_functions.R')
+source('03_Model_functions.R')
+
+library(knitr)
+####################################################################################################
+
+####################################################################################################
+                                      #Descriptive Tables #
+####################################################################################################
+
+###########################################################
+#Table for two categories- fill in variable list for each type of variable#
+###########################################################
+a<-c('TRT','outcome') #categorical variables
+b<-c('iugr','death','death_7','TREAT') #categorical with only one row output
+c<-c('gestational_age','APGAR1','APGAR5') #continuous - regular mean
+d<-c('time_on_mv','days_in_hosp')           #continuous - geometric mean
+e<-'none'           #continuous - geometric mean with +1-1
+f<-'none'           #Wilcoxon rank-sum, median(IQR)
+group<- # group variable
+tab_2_groups<-tab_2(a,b,c,d,e,f,group)
+
+
+#############################################################################
+#Table for three categories- fill in variable list for each type of variable#
+#############################################################################
+a<-c('TRT','outcome') #categorical variables
+b<-c('iugr','death','death_7','TREAT') #categorical with only one row output
+c<-c('gestational_age','APGAR1','APGAR5') #continuous - regular mean
+d<-c('time_on_mv','days_in_hosp')           #continuous - geometric mean
+e<-'none'           #continuous - geometric mean with +1-1
+group<- # group variable
+tab_3_groups<-tab_3(a,b,c,d,e,group)
+
+
+####################################################################################################
+                                      #Models#
+####################################################################################################
+
+tab_model_results<-fx_model_linear('outcome','predictor(s)')
+
+```
+
+#Statistical Methods
+Demographic and clinical characteristics were compared using two-sample t-tests and Fisher's exact tests for continuous and categorical variables, respectively. Variables were visually assessed for skewness and log-transformed when appropriate. Significance was set at 0.05. R version 3.1.1 software (R Foundation for Statistical Computing, Vienna, Austria, http://www.R-project.org/) and rmarkdown: Dynamic Documents for R. R package version 0.3.3. http://CRAN.R-project.org/package=rmarkdown were utilized.
+
+Results presented are based on the dataset `r data_set_name`.     
+
+#Results
+
+##Descriptive
+
+
+
+
+**Table 1. Demographic and Clinical Characteristics***
+```{r,results='asis',echo=FALSE,message=FALSE,warning=FALSE}
+kable(tab_2_groups)
+```
+
+*Geometric Mean and 95% CI
+**Median and IQR
+
+
+**Table 2.  Demographic and Clinical Characteristics**
+```{r,results='asis',echo=FALSE,message=FALSE,warning=FALSE}
+kable(tab_3_groups)
+```
+
+*Geometric Mean and 95% CI
+
+##Models
+
+
+**Table 2. Regression results**
+```{r,results='asis',echo=FALSE,message=FALSE,warning=FALSE}
+kable(tab_model_results)
+```
+
