@@ -22,25 +22,33 @@ library(knitr)
 ###########################################################
 #Table for two categories- fill in variable list for each type of variable#
 ###########################################################
-a<-c('TRT','outcome') #categorical variables
-b<-c('iugr','death','death_7','TREAT') #categorical with only one row output
-c<-c('gestational_age','APGAR1','APGAR5') #continuous - regular mean
-d<-c('time_on_mv','days_in_hosp')           #continuous - geometric mean
-e<-'none'           #continuous - geometric mean with +1-1
-f<-'none'           #Wilcoxon rank-sum, median(IQR)
-group<- # group variable
+#Use iris data with two categories
+dat<-data[data$Species!='Virginica',]
+dat$Species<-as.factor(as.character(dat$Species))
+###############
+
+a<-c('sepal_di') #categorical variables
+b<-c('sepal_di') #categorical with only one row output
+c<-c('Sepal.Length','Petal.Length') #continuous - regular mean
+d<-c('Sepal.Width') #continuous - geometric mean
+e<-'none' #continuous - geometric mean with +1-1
+f<-'Petal.Width' #Wilcoxon rank-sum, median(IQR)
+group<- dat$Species
 tab_2_groups<-tab_2(a,b,c,d,e,f,group)
 
 
 #############################################################################
 #Table for three categories- fill in variable list for each type of variable#
 #############################################################################
-a<-c('TRT','outcome') #categorical variables
-b<-c('iugr','death','death_7','TREAT') #categorical with only one row output
-c<-c('gestational_age','APGAR1','APGAR5') #continuous - regular mean
-d<-c('time_on_mv','days_in_hosp')           #continuous - geometric mean
-e<-'none'           #continuous - geometric mean with +1-1
-group<- # group variable
+#use original dataset with three groups
+dat<-data
+############
+a<-c('sepal_di') #categorical variables
+b<-c('sepal_di') #categorical with only one row output
+c<-c('Sepal.Length','Petal.Length') #continuous - regular mean
+d<-c('Sepal.Width','Petal.Width') #continuous - geometric mean
+e<-'none' #continuous - geometric mean with +1-1
+group<-dat$Species # group variable
 tab_3_groups<-tab_3(a,b,c,d,e,group)
 
 
@@ -48,7 +56,7 @@ tab_3_groups<-tab_3(a,b,c,d,e,group)
                                       #Models#
 ####################################################################################################
 
-tab_model_results<-fx_model_linear('outcome','predictor(s)')
+#tab_model_results<-fx_model_linear('outcome','predictor(s)')
 
 ```
 
@@ -85,6 +93,6 @@ kable(tab_3_groups)
 
 **Table 2. Regression results**
 ```{r,results='asis',echo=FALSE,message=FALSE,warning=FALSE}
-kable(tab_model_results)
+#kable(tab_model_results)
 ```
 

@@ -64,10 +64,10 @@ tab_2<-function(cat_var,cat_var_one,cont_var,geom_var,geom_varb,w_var,x){
 tab_3<-function(cat_var,cat_var_one,cont_var,geom_var,geom_varb,x){
   
   #categorical - all rows
-  temp<-fx_section(cat_var,x,prop_table,'')
+  temp<-fx_section(cat_var,x,prop_table_3,'')
   
   #categorical - last row of table only 
-  temp1<-fx_section(cat_var_one,x,prop_table_one,'')
+  temp1<-fx_section(cat_var_one,x,prop_table_one_3,'')
   
   #continuous rows
   temp2<-fx_section(cont_var,x,AOV_means,'')

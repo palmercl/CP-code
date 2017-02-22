@@ -210,7 +210,7 @@ AOV_geom_meansb<-function(y,x){
 }
 
 ########################################################################################
-prop_table<- function(y,x) {
+prop_table_3<- function(y,x) {
   
   temp<-table(y,x)
   temp.prop<-prop.table(temp,2)
@@ -229,7 +229,7 @@ prop_table<- function(y,x) {
   return(t)
 }
 
-prop_table_one<- function(y,x) {
+prop_table_one_3<- function(y,x) {
   
   temp<-table(y,x)
   temp.prop<-prop.table(temp,2)
