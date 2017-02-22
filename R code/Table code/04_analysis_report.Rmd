@@ -56,7 +56,7 @@ tab_3_groups<-tab_3(a,b,c,d,e,group)
                                       #Models#
 ####################################################################################################
 
-#tab_model_results<-fx_model_linear('outcome','predictor(s)')
+tab_model_results<-fx_model_linear('Sepal.Length','Species')
 
 ```
 
@@ -72,12 +72,13 @@ Results presented are based on the dataset `r data_set_name`.
 
 
 
-**Table 1. Demographic and Clinical Characteristics***
+**Table 1. Demographic and Clinical Characteristics**
 ```{r,results='asis',echo=FALSE,message=FALSE,warning=FALSE}
 kable(tab_2_groups)
 ```
 
 *Geometric Mean and 95% CI
+
 **Median and IQR
 
 
@@ -93,6 +94,6 @@ kable(tab_3_groups)
 
 **Table 2. Regression results**
 ```{r,results='asis',echo=FALSE,message=FALSE,warning=FALSE}
-#kable(tab_model_results)
+kable(tab_model_results)
 ```
 

@@ -13,7 +13,8 @@ fx_model_linear<-function(y,x){
                                   round(confint(model)[,2],3),")"),
                   Pvalue=round(summary(model)$coef[,4],4),
                   row.names=NULL)
-  colnames(ret)<-c("Predictor","Estimate (95% CI)","PValue")
+  ret$Pvalue[ret$Pvalue==0]<-'<0.0001'
+  colnames(ret)<-c("Predictor","Estimate (95% CI)","P Value")
   return(ret)
   
 }
