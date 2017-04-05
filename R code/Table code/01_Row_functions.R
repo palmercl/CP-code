@@ -1,4 +1,155 @@
 ####################################################################################################
+#####################################   Row Functions for n groups       ###########################
+####################################################################################################
+
+#########################################Categorical Variables######################################
+
+###################
+# No. (percentage)#
+###################
+prop_row<- function(y,x) {
+  
+  temp<-table(y,x)
+  temp.prop<-round(prop.table(temp,2)*100,0)
+  p<-round(fisher.test(temp)$p.value,4)
+  
+  m<-matrix(0,ncol=ncol(temp)+2,nrow=1)
+  
+  temp1<-rbind(m,c(Variable="",c(rep("",ncol(temp))),Pval=p.y))
+  
+  for(i in (1:nrow(temp))){
+    temp1<-rbind(temp1,c(Variable="",paste0(temp[i,]," (",temp.prop[i,],")"),Pval=" "))
+  }
+  
+  t<-data.frame(temp1[-1,])
+  
+  t$Pval<-as.character(t$Pval)
+  t$Pval[t$Pval==0]<-"<0.0001"
+  
+  return(t)
+  
+}
+
+#####################################################
+# No. (percentage) for binary outcome (one row only)#
+#####################################################
+prop_row_one<- function(y,x) {
+  
+  temp<-table(y,x)
+  temp.prop<-round(prop.table(temp,2)*100,0)
+  p<-round(fisher.test(temp)$p.value,4)
+  
+  m<-matrix(0,ncol=ncol(temp)+2,nrow=1)
+  
+  temp1<-rbind(m,c(Variable="",c(rep("",ncol(temp))),Pval=p.y),
+               c(Variable="",paste0(temp[2,]," (",temp.prop[2,],")"),Pval=" "))
+  
+  t<-data.frame(temp1[-1,])
+  
+  t$Pval<-as.character(t$Pval)
+  t$Pval[t$Pval==0]<-"<0.0001"
+  
+  return(t)
+  
+}
+
+####################################################################################################
+#########################################Continuous Variables#######################################
+
+##############
+# Mean +/- SD#
+############## 
+mean_row<-function(y,x){
+  
+  mean.y<-round(tapply(y,x,mean,na.rm=T))
+  sd.y<-round(tapply(y,x,sd,na.rm=T))
+  
+  if (length(mean.y) == 2){
+    p.y<-round(t.test(y~as.factor(x),data=dat)$p.value,4)
+  } else{
+    p.y<-round(summary(aov(y~as.factor(x)))[[1]][[1,"Pr(>F)"]],4)}
+  
+  m<-matrix(0,ncol=length(mean.y)+2,nrow=1)
+  
+  t<-data.frame(rbind(m,c(Variable="", paste0(mean.y,"±",sd),Pval=p.y)))[-1,]
+  
+  t$Pval<-as.character(t$Pval)
+  t$Pval[t$Pval==0]<-"<0.0001"
+  
+  return(t)
+}
+
+##########################
+# Geometric Mean (95% CI)#
+########################## 
+geom_mean_row<-function(y,x){
+  
+  est<-round(exp(lm(log(y)~as.factor(x)+0,data=dat)$coef))
+  ci<-round(exp(confint(lm(log(y)~as.factor(x)+0,data=dat))),1)
+  
+  if (length(est) == 2){
+    p.y<-round(t.test(log(y)~as.factor(x),data=dat)$p.value,4)
+  } else{
+    p.y<-round(summary(aov(log(y)~as.factor(x)))[[1]][[1,"Pr(>F)"]],4)}
+  
+  m<-matrix(0,ncol=length(est)+2,nrow=1)
+  
+  t<-data.frame(rbind(m,c(Variable="", paste0(est," (",ci[,1],", ",ci[,2],")"),Pval=p.y)))[-1,]
+  
+  t$Pval<-as.character(t$Pval)
+  t$Pval[t$Pval==0]<-"<0.0001"
+  
+  return(t)
+}
+
+#################################
+# Geometric Mean +1, -1 (95% CI)#
+################################# 
+
+geom_mean_row_b<-function(y,x){
+  
+  est<-round(exp(lm(log(y+1)~as.factor(x)+0,data=dat)$coef)-1)
+  ci<-round(exp(confint(lm(log(y)~as.factor(x)+0,data=dat)))-1)
+  
+  if (length(est) == 2){
+    p.y<-round(t.test(log(y+1)~as.factor(x),data=dat)$p.value,4)
+  } else{
+    p.y<-round(summary(aov(log(y+1)~as.factor(x)))[[1]][[1,"Pr(>F)"]],4)}
+  
+  m<-matrix(0,ncol=length(est)+2,nrow=1)
+  
+  t<-data.frame(rbind(m,c(Variable="", paste0(est," (",ci[,1],", ",ci[,2],")"),Pval=p.y)))[-1,]
+  
+  t$Pval<-as.character(t$Pval)
+  t$Pval[t$Pval==0]<-"<0.0001"
+  
+  return(t)
+  
+}
+
+###############
+# Median (IQR)#
+############### 
+median_row<-function(y,x){
+  
+  med.y<-round(tapply(y,x,median,na.rm=T),2)
+  q1<-tapply(y,x,function(x) quantile(x,.25,na.rm=T))
+  q2<-tapply(y,x,function(x) quantile(x,.75,na.rm=T))
+  
+  if (length(est) == 2){
+    p.y<-round(wilcox.test(y~x)$p.value,4)
+  } else{
+    p.y<-round(kruskal.test(y~x)$p.value,4)}
+  
+  m<-matrix(0,ncol=length(med.y)+2,nrow=1)
+  
+  t<-data.frame(rbind(m,c(Variable="", paste0(med.y," (",q1[,1],", ",q2[,2],")"),Pval=p.y)))[-1,]
+  
+  t$Pval[t$Pval==0]<-"<0.0001"
+  
+  return(t)
+}
+####################################################################################################
 #####################################   Row Functions for 2 groups       ###########################
 ####################################################################################################
 
@@ -173,6 +324,24 @@ AOV_means<-function(y,x){
   return(t)
 }
 
+median_row<-function(y,x){
+  median.x<-round(tapply(y,x,mean,na.rm=T))
+  q1<-tapply(y,x,function(x) quantile(x,.25,na.rm=T))
+  q2<-tapply(y,x,function(x) quantile(x,.75,na.rm=T))
+  p<-round(kruskal.test(y~x)$p.value,4)
+  
+  t<-data.frame(Variable="",
+                one=paste0(median.x[1]," (",q1[1],", ",q2[1],")"),
+                two=paste0(median.x[2]," (",q1[2],", ",q2[2],")"), 
+                tre=paste0(median.x[3]," (",q1[3],", ",q2[3],")"),
+                Pval=p)
+  
+  t$Pval<-as.character(t$Pval)
+  t$Pval[t$Pval==0]<-"<0.0001"
+  
+  return(t)
+}
+
 AOV_geom_means<-function(y,x){
   est<-lm(log(y)~as.factor(x)+0,data=dat)
   ci<-round(exp(confint(est)),1)
@@ -214,7 +383,7 @@ prop_table_3<- function(y,x) {
   
   temp<-table(y,x)
   temp.prop<-prop.table(temp,2)
-  p<-format(round(fisher.test(temp)$p.value,4),scientific=FALSE)
+  p<-format(round(chisq.test(temp)$p.value,4),scientific=FALSE)
   
   #put row together
   t<-data.frame(Variable=c("",levels(as.factor(y))),
@@ -244,7 +413,8 @@ prop_table_one_3<- function(y,x) {
   
   t$Pval<-as.character(t$Pval)
   t$Pval[t$Pval==0]<-"<0.0001"
-  
+    
   return(t)
 }
 ####################################################################################################
+
