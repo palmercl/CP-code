@@ -15,7 +15,7 @@ prop_row<- function(y,x) {
   
   m<-matrix(0,ncol=ncol(temp)+2,nrow=1)
   
-  temp1<-rbind(m,c(Variable="",c(rep("",ncol(temp))),Pval=p.y))
+  temp1<-rbind(m,c(Variable="",c(rep("",ncol(temp))),Pval=p))
   
   for(i in (1:nrow(temp))){
     temp1<-rbind(temp1,c(Variable="",paste0(temp[i,]," (",temp.prop[i,],")"),Pval=" "))
@@ -41,7 +41,7 @@ prop_row_one<- function(y,x) {
   
   m<-matrix(0,ncol=ncol(temp)+2,nrow=1)
   
-  temp1<-rbind(m,c(Variable="",c(rep("",ncol(temp))),Pval=p.y),
+  temp1<-rbind(m,c(Variable="",c(rep("",ncol(temp))),Pval=p),
                c(Variable="",paste0(temp[2,]," (",temp.prop[2,],")"),Pval=" "))
   
   t<-data.frame(temp1[-1,])
@@ -71,7 +71,7 @@ mean_row<-function(y,x){
   
   m<-matrix(0,ncol=length(mean.y)+2,nrow=1)
   
-  t<-data.frame(rbind(m,c(Variable="", paste0(mean.y,"±",sd),Pval=p.y)))[-1,]
+  t<-data.frame(rbind(m,c(Variable="", paste0(mean.y,"±",sd.y),Pval=p.y)))[-1,]
   
   t$Pval<-as.character(t$Pval)
   t$Pval[t$Pval==0]<-"<0.0001"
@@ -132,9 +132,9 @@ geom_mean_row_b<-function(y,x){
 ############### 
 median_row<-function(y,x){
   
-  med.y<-round(tapply(y,x,median,na.rm=T),2)
-  q1<-tapply(y,x,function(x) quantile(x,.25,na.rm=T))
-  q2<-tapply(y,x,function(x) quantile(x,.75,na.rm=T))
+  med.y<-round(tapply(y,x,median,na.rm=T))
+  q1<-round(tapply(y,x,function(x) quantile(x,.25,na.rm=T)))
+  q2<-round(tapply(y,x,function(x) quantile(x,.75,na.rm=T)))
   
   if (length(est) == 2){
     p.y<-round(wilcox.test(y~x)$p.value,4)
@@ -143,8 +143,9 @@ median_row<-function(y,x){
   
   m<-matrix(0,ncol=length(med.y)+2,nrow=1)
   
-  t<-data.frame(rbind(m,c(Variable="", paste0(med.y," (",q1[,1],", ",q2[,2],")"),Pval=p.y)))[-1,]
+  t<-data.frame(rbind(m,c(Variable="", paste0(med.y," (",q1,", ",q2,")"),Pval=p.y)))[-1,]
   
+  t$Pval<-as.character(t$Pval)
   t$Pval[t$Pval==0]<-"<0.0001"
   
   return(t)

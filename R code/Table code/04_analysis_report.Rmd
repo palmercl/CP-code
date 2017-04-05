@@ -20,10 +20,10 @@ library(knitr)
 ####################################################################################################
 
 ###########################################################
-#Table for two categories- fill in variable list for each type of variable#
+#Table for n categories- fill in variable list for each type of variable#
 ###########################################################
 #Use iris data with two categories
-dat<-data[data$Species!='Virginica',]
+dat<-data
 dat$Species<-as.factor(as.character(dat$Species))
 ###############
 
@@ -34,7 +34,7 @@ d<-c('Sepal.Width') #continuous - geometric mean
 e<-'none' #continuous - geometric mean with +1-1
 f<-'Petal.Width' #Wilcoxon rank-sum, median(IQR)
 group<- dat$Species
-tab_2_groups<-tab_2(a,b,c,d,e,f,group)
+tab_groups<-tab(a,b,c,d,e,f,group)
 
 
 #############################################################################
