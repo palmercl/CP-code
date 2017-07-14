@@ -17,7 +17,6 @@
 #' @export
 #' @examples
 #' prop_row()
-#' 
 prop_row<- function(y,x) {
   
 temp<-table(y,x)
@@ -74,8 +73,6 @@ prop_row_one<- function(y,x) {
 ###################
 # No. (percentage)#
 ###################
-#' A row function
-#'
 #' This function creates no. and % for each level of the variable, % based on row total, p-value from Chi-sq test
 #' @param Variable of interest and group variable 
 #' @keywords Categorical, >2 levels  
@@ -108,7 +105,6 @@ prop_rowb<- function(y,x) {
 #####################################################
 # No. (percentage) for binary outcome (one row only)#
 #####################################################
-#' A row function
 #' This function creates no. and % for the second level of the variable, % based on row total, p-value from Chi-sq test
 #' @param Variable of interest and group variable 
 #' @keywords Categorical, <3 levels  
