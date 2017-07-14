@@ -53,6 +53,55 @@ prop_row_one<- function(y,x) {
   return(t)
 }
 
+###################
+# No. (percentage)#
+###################
+prop_rowb<- function(y,x) {
+  
+  temp<-table(y,x)
+  temp.prop<-round(prop.table(temp,1)*100,0)
+  p<-round(chisq.test(temp)$p.value,4)
+  
+  temp1<-paste0(table(y), ' (',round(prop.table(table(y))*100,0), '%)')
+  
+  temp2<-c(Variable="",c(rep("",ncol(temp)+1)),Pval=p)
+  
+  for(i in (1:nrow(temp))){
+    temp2<-rbind(temp2,c(Variable=rownames(temp)[i],temp1[i],
+                         paste0(temp[i,]," (",temp.prop[i,],"%)"),Pval=" "))
+  } 
+  
+  t<-data.frame(temp2,row.names=NULL)
+  
+  t$Pval<-as.character(t$Pval)
+  t$Pval[t$Pval==0]<-"<0.0001"
+  
+  return(t)  
+}
+
+#####################################################
+# No. (percentage) for binary outcome (one row only)#
+#####################################################
+prop_row_oneb<- function(y,x) {
+  
+  temp<-table(y,x)
+  temp.prop<-round(prop.table(temp,1)*100,0)
+  p<-round(chisq.test(temp)$p.value,4)
+  
+  temp_all<-paste0(table(y), ' (',round(prop.table(table(y))*100,0), '%)')
+  
+  m<-matrix(0,ncol=ncol(temp)+3,nrow=1)
+  
+  temp1<-data.frame(rbind(m,c(Variable="",temp_all[2],paste0(temp[2,]," (",temp.prop[2,],"%)"),Pval=p)))
+  
+  t<-temp1[-1,]
+  
+  t$Pval<-as.character(t$Pval)
+  t$Pval[t$Pval==0]<-"<0.0001"
+  
+  return(t)
+}
+
 ####################################################################################################
 #########################################Continuous Variables#######################################
 
