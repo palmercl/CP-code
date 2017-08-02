@@ -7,42 +7,66 @@ output: word_document
 
  
 ```{r,results='hide',echo=FALSE,message=FALSE,warning=FALSE}
-library(knitr)
-library(moments)
+#packages to install
+install.packages('knitr')
+install.packages('devtools')
+install.packages('roxygen2')
 
-source('00_Data_setup.R')
-source('01_Row_functions.R')
-source('02_Table_functions.R')
-source('03_Model_functions.R')
+#install my package
+library(devtools)
+install_github('palmercl/Table1')
+
+#load additional packages
+library(knitr)
+library(Hmisc)
+library(Table1)
+
 ####################################################################################################
 
 ####################################################################################################
                                       #Descriptive Tables #
 ####################################################################################################
+data_set_name<-'R Built-in Iris'
+
+#create dichotomous variable
+iris$sepal_di<-as.factor((iris$Sepal.Length<5)*1)
+
+#set factor levels
+levels(iris$sepal_di)=c("<5",'>=5')
+levels(iris$Species)=c('Setosa','Versicolor','Virginica')
+
+#Set Labels
+label(iris$sepal_di)='Sepal Length'
+label(iris$Sepal.Length)="Sepal Length"
+label(iris$Sepal.Width)='Sepal weight'
+label(iris$Petal.Length)='Petal Length'
+label(iris$Petal.Width)='Petal Width'
 
 ###########################################################
 #Table for n categories#
 ###########################################################
+
 #Use iris data with two categories
-dat<-data[data$Species!='Setosa',]
-dat$Species<-as.factor(as.character(dat$Species))
+test1<-iris[iris$Species!='Setosa',]
+test1$Species<-as.factor(as.character(test1$Species))
 
+#Use iris data with one category
+test2<-iris[iris$Species=='Setosa',]
+test2$Species<-as.factor(as.character(test2$Species))
 ################################################################################################
-#vector with variables and group/ treatment variable
-tab1<-final_table(c('sepal_di','Sepal.Length','Petal.Length','Sepal.Width','Petal.Width'),dat$Species)
-
+                                          ########
+                                          #Tables#
+                                          ########
+#Three groups
+tab1<-final_table(iris,c('Sepal.Length','Petal.Length','Sepal.Width','Petal.Width','sepal_di'),
+                  iris$Species,1,T,2)
+#Two groups
+tab2<-final_table(test1,c('Sepal.Length','Petal.Length','Sepal.Width','Petal.Width','sepal_di'),
+                  test1$Species,1,F)
+#One group
+tab3<-final_table(test2,c('Sepal.Length','Petal.Length','Sepal.Width','Petal.Width','sepal_di'),
+                  test2$Species,2,T,1)
 ################################################################################################
-#use original dataset with three groups - function automatically adjusts to # of groups
-dat<-data
-############
-#vector with variables and group/ treatment variable
-tab2<-final_table(c('sepal_di','Sepal.Length','Petal.Length','Sepal.Width','Petal.Width'),dat$Species)
-
-####################################################################################################
-                                      #Models#
-####################################################################################################
-
-tab_model_results<-fx_model_linear('Sepal.Length','Species')
 
 ```
 
@@ -69,10 +93,13 @@ kable(tab2)
 
 *Median and IQR
 
-##Models
-
-**Table 3. Regression results**
+**Table 3.  Demographic and Clinical Characteristics**
 ```{r,results='asis',echo=FALSE,message=FALSE,warning=FALSE}
-kable(tab_model_results)
+kable(tab3)
 ```
+
+*Median and IQR
+
+
+
 
